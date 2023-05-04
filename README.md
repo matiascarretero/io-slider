@@ -1,31 +1,31 @@
-⚠ This plugins is intended for developers and under active development. Review the code, look for problems and contribute to make this code better!
+⚠ This plugin is intended for developers and under active development. Review the code, look for problems, and contribute to making this code better!
 
 # IO Slider
-**IO Slider** is a WordPress plugin that creates slider or carousel for posts, pages and custom post types using Swiper library. You can use write your own templates for each element with HTML and `{@post_title}` like [tags](#available-tags).
+**IO Slider** is a WordPress plugin that creates sliders and carousels for posts, pages, and custom post types using the Swiper library. You can write custom templates for each element with HTML and `{@post_title}` like [tags](#available-tags).
 
 - **Shortcode based**
-Write `[io_slider]` everywhere in your content to create a slider. Set the shortcode attributes acording to this documentation.
+Write `[io_slider]` everywhere in your content to create a slider. Set the shortcode attributes according to this documentation.
 - **Custom templates**
 You can provide a custom template for each item rendered in this way: `[io_slider]<h2>{@post_title}</h2>[/io_slider]`.
 - **Allow multiple sliders per page**
-Add many sliders as you want in the same page. Each slider will not collide with the others, and JS and CSS assets will be loaded only once.
+Add as many sliders as you want on the same page. Each slider won't collide with others, and JS and CSS assets will be loaded only once.
 - **Elementor ready**
-This plugin adds a **IO Slider** widget to your library with native options and styling.
+This plugin adds an **IO Slider** widget to your library with Elementor native options and styling.
 - **Compatible with [Pods](https://es.wordpress.org/plugins/pods/) tags**
-If you have Pods active, you can use field and magic tags with your templates. Make sure to have Pods enabled for your post type.
+If Pods plugin is active, you can use field and magic tags with your templates. Make sure to create a *pods*  for your post type.
 
 ## Usage
-You can create as many sliders as you want. Doesn't matter if they are all in the same URL or show different post types. Just choose one of this options:
+You can create as many sliders as you want. It doesn't matter if they are all in the same URL or show different post types. Just choose one of these options:
 
 - Use the shortcode `[io_slider]` in a page or post content
-- If Elementor is enabled, find the IO Slider widget and drag and drop to your page. You will set options and styling in the Elementor widget panel.
+- If Elementor is enabled, find the IO Slider widget and drag and drop it to your page. You will set options and styling in the Elementor widget panel.
 - In your theme or plugin file, call via do_shortcode() function:
     ```php
     do_shortcode("[io_slider]")
     ```
 
 ## Settings
-Pass each of this settings as a shortcode attribute.
+Pass each of these settings as a shortcode attribute.
 
 ### Query
 |Parameter|Default|Description|
@@ -38,7 +38,7 @@ order|`ASC`|Ascending or descending order: `ASC` or `DESC`
 ### Template
 Set the content of the shortcode to provide your custom HTML template with `{@field}` tags. Check below the available tags.
 
-If you don't provide one the default template is used:
+If you don't provide one, the default template is used:
 ```
 <div class="io-slide io-slide-{@ID}" data-id="{@ID}">
     {@post_thumbnail}
@@ -53,7 +53,7 @@ If you don't provide one the default template is used:
 id|null|(string) If you provide this attribute it will be used in the `id` attribute for the slider container. It's useful for CSS styling.
 overflow|`hidden` `visible`|Non-active slides should be visible? Default to `hidden`
 navigation|`arrows` `dots` `both`| Choose slider navigation style. Default to `arrows`
-arrows_position|`outside` `inside`| Next and previous slide buttons should be positionated inside (over the slides) or outside? Default: `outside`
+arrows_position|`outside` `inside`| Next and previous slide buttons should be positioned inside (over the slides) or outside? Default: `outside`
 navigation_previous_icon|`svg`
 navigation_next_icon|`svg`
 slidesperview|`1`
