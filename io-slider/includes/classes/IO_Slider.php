@@ -76,7 +76,7 @@ if (!class_exists('\IO\IO_Slider')) {
             return '<div class="io-slide io-slide-{@ID}" data-id="{@ID}">
                 {@post_thumbnail}
                 <h3 class="title">{@post_title}</h3>
-                <div class="content">{@post_content}[oceanwp_date]</div>
+                <div class="content">{@post_content}</div>
             </div>';
         }
 
