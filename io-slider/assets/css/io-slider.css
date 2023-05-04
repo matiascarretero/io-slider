@@ -1,0 +1,76 @@
+.io-swiper {
+    margin: auto;
+    --navigation-color: #000000;
+}
+
+.io-swiper-button-next,
+.io-swiper-button-prev {
+    position: absolute;
+    top: 40%;
+    bottom: auto;
+    width: var(--navigation-width, 30px);
+    z-index: 10;
+    cursor: pointer;
+    transition: ease all .3s;
+    background-size: contain;
+    transform: translateY(-50%);
+}
+
+.io-swiper-button-next img,
+.io-swiper-button-prev img {
+    width: 100%;
+    height: auto;
+}
+
+.io-swiper-button-next,
+.swiper-rtl .io-swiper-button-prev {
+    right: 5px;
+    left: auto;
+}
+
+.io-swiper-button-prev,
+.swiper-rtl .io-swiper-button-next {
+    left: 5px;
+    right: auto;
+}
+
+.io-swiper-button-next.swiper-button-disabled,
+.io-swiper-button-prev.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: auto;
+    pointer-events: none;
+}
+
+.io-swiper.with-space {
+    width: calc(100% - calc(20px + var(--navigation-width, 30px)) * 2);
+}
+.io-swiper.overflow-hidden {
+    overflow: hidden;
+}
+.io-swiper-button-next,
+.io-swiper-button-next svg,
+.elementor-swiper-button-next,
+.elementor-swiper-button-next svg {
+    color: var(--navigation-color, --e-global-color-primary);
+    fill: var(--navigation-color, --e-global-color-primary);
+}
+.io-swiper-button-prev,
+.io-swiper-button-prev svg,
+.elementor-swiper-button-prev,
+.elementor-swiper-button-prev svg {
+    color: var(--navigation-color, --e-global-color-primary);
+    fill: var(--navigation-color, --e-global-color-primary);
+}
+
+@media (min-width: 768px) {
+    
+    .io-swiper-button-next,
+    .swiper-rtl .io-swiper-button-prev {
+        right: 0;
+    }
+
+    .io-swiper-button-prev,
+    .swiper-rtl .io-swiper-button-next {
+        left: 0;
+    }
+}
