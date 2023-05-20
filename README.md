@@ -13,6 +13,8 @@ Add as many sliders as you want on the same page. Each slider won't collide with
 This plugin adds an **IO Slider** widget to your library with Elementor native options and styling.
 - **Compatible with [Pods](https://es.wordpress.org/plugins/pods/) tags**
 If Pods plugin is active, you can use field and magic tags with your templates. Make sure to create a *pods*  for your post type.
+- **Pass custom slides to swiper**
+In PHP you can pass an array of slides to the io_slider() function. This will override the query call.
 
 ## Usage
 You can create as many sliders as you want. It doesn't matter if they are all in the same URL or show different post types. Just choose one of these options:
@@ -23,6 +25,7 @@ You can create as many sliders as you want. It doesn't matter if they are all in
     ```php
     do_shortcode("[io_slider]")
     ```
+- Also, you can call funcion `io_slider()` in PHP with the same arguments as the shortcode.
 
 ## Settings
 Pass each of these settings as a shortcode attribute.
@@ -53,7 +56,7 @@ If you don't provide one, the default template is used:
 id|null|(string) If you provide this attribute it will be used in the `id` attribute for the slider container. It's useful for CSS styling.
 overflow|`hidden` `visible`|Non-active slides should be visible? Default to `hidden`
 navigation|`arrows` `dots` `both`| Choose slider navigation style. Default to `arrows`
-arrows_position|`outside` `inside`| Next and previous slide buttons should be positioned inside (over the slides) or outside? Default: `outside`
+arrows_position|`outside` `inside`| Next and previous slide buttons should be positioned inside (over the slides) or outside? Default: `inside`
 navigation_previous_icon|`svg`
 navigation_next_icon|`svg`
 slidesperview|`1`

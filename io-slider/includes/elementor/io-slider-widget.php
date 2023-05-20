@@ -1,9 +1,9 @@
 <?php
+namespace IO\Elementor;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-namespace IO\Elementor;
 
 class Slider extends \Elementor\Widget_Base
 {

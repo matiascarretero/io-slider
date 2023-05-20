@@ -16,3 +16,8 @@ define('IO_SLIDER_URL', plugin_dir_url( __FILE__ ));
 require_once( plugin_dir_path( __FILE__ )."includes/classes/IO_Slider.php");
 
 IO\IO_Slider::init();
+
+// Declare global function io_slider()
+function io_slider($atts = []) {
+    return IO\IO_Slider::get_instance()->callback($atts);
+}

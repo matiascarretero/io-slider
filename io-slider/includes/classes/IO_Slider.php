@@ -1,9 +1,9 @@
 <?php
+namespace IO;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-namespace IO;
 
 if (!class_exists('\IO\IO_Slider')) {
     class IO_Slider {
@@ -36,7 +36,9 @@ if (!class_exists('\IO\IO_Slider')) {
         static function get_default_settings() {
             return [
                 "template" => false, // HTML template with {@field} tags, or false for default template
-    
+                
+                "slides" => false, // (false|array) Array of HTML strings to use as each slide.
+
                 "query" => false, // (WP_Query instance|false) Set false to create a new query.
                 "post_type" => "post", // (string|array) any, post, page, revision, or custom post type
                 "posts_per_page" => "-1", // (int|-1) -1 to return all post
@@ -46,7 +48,7 @@ if (!class_exists('\IO\IO_Slider')) {
                 
                 "id" => false,
     
-                "arrows_position" => "outside", // (string) "outside" or "inside"
+                "arrows_position" => "inside", // (string) "outside" or "inside"
                 "overflow" => "hidden",
     
                 "navigation" => "arrows", // (string) "arrows", "dots", "both"
@@ -83,13 +85,19 @@ if (!class_exists('\IO\IO_Slider')) {
         public function render($settings = []) {
 
             $return = '';
+            $slides = [];
 
             // Get options and settings
             $settings = array_replace_recursive(IO_Slider::get_default_settings(), $settings);
             if (!isset($settings["template"]) || !$settings['template'] || empty($settings['template'])) $settings["template"] = IO_Slider::get_default_template();
     
             // Use WP_Query provided in options or call a new 
-            if (is_object($settings['query']) && $settings['query'] instanceof \WP_Query) {
+            if ($settings["slides"]&&!empty($settings["slides"])) {
+
+                // Use provided slides
+                $slides = $settings["slides"];
+
+            } else if (is_object($settings['query']) && $settings['query'] instanceof \WP_Query) {
                 
                 // Use provided WP_Query 
                 $the_query = $settings['query'];
@@ -114,21 +122,8 @@ if (!class_exists('\IO\IO_Slider')) {
     
             }
             
-            if ($the_query && $the_query->have_posts()) {
-    
-                // Load Swiper script and styles
-                wp_enqueue_script('swiper-js', 'https://unpkg.com/swiper/swiper-bundle.min.js', '', '', true);
-                wp_enqueue_style('io-slider-css', esc_url($this->get_plugin_url('assets/css/io-slider.css')), false);
-    
-                // Create an array of slides
-                $slides = [];
-                if($settings["id"]&&!empty(trim($settings["id"]))) {
-                    $id = trim($settings["id"]);
-                } else {
-                    $id = 'io-slider-'.uniqid();
-                }
-    
-                $return = '<div class="io-slider" id="'.$id.'">';
+            // If a query is neccesary, populate $slides array.
+            if (empty($slides) && $the_query && $the_query->have_posts()) {
                 
                 while ($the_query->have_posts()) {
                     $the_query->the_post();
@@ -159,33 +154,50 @@ if (!class_exists('\IO\IO_Slider')) {
                         $temp_view = str_replace(array_keys($replacements),array_values($replacements),$temp_view);
                     }
     
-                    $slides[] = '<div class="swiper-slide">'.$temp_view.'</div>';
+                    $slides[] = $temp_view;
                 }
     
                 wp_reset_postdata();
     
-                $slides_count = count($slides);
+            }
+
+
+            $slides_count = count($slides);
+
+            if($slides_count) {
+                // Load Swiper script and styles
+                wp_enqueue_script('swiper-js', 'https://unpkg.com/swiper/swiper-bundle.min.js', '', '', true);
+                wp_enqueue_style('io-slider-css', esc_url($this->get_plugin_url('assets/css/io-slider.css')), false);
     
-                // Return slider
-                $return .= '
-                <div class="io-swiper '
-                    . ($settings["arrows_position"]==="outside" ? " with-space" : "")
-                    . ($settings["overflow"]=="hidden"||$settings["overflow"]=="false"||$settings["overflow"]===false ? " overflow-hidden" : "")
-                    . '">
-                    <div class="swiper-wrapper">
-                        '.implode("", $slides).'
-                    </div>';
-                    
-                    if (1 < $slides_count) :
+                if($settings["id"]&&!empty(trim($settings["id"]))) {
+                    $id = trim($settings["id"]);
+                } else {
+                    $id = 'io-slider-'.uniqid();
+                }
+    
+                $return = '<div class="io-slider" id="'.$id.'">';
+    
+                    // Return slider
+                    $return .= '
+                    <div class="io-swiper '
+                        . ($settings["arrows_position"]==="outside" ? " with-space" : "")
+                        . ($settings["overflow"]=="hidden"||$settings["overflow"]=="false"||$settings["overflow"]===false ? " overflow-hidden" : "")
+                        . '">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">'.implode('</div><div class="swiper-slide">', $slides).'</div>
+                        </div>';
                         
-                        if ((in_array($settings['navigation'], ['dots', 'both']))) {
-                            $return .= '<div class="swiper-pagination"></div>';
-                        }
-                        
-                        $return .= $this->render_navigation($settings);
-    
-                    endif;
-    
+                        if (1 < $slides_count) :
+                            
+                            if ((in_array($settings['navigation'], ['dots', 'both']))) {
+                                $return .= '<div class="swiper-pagination"></div>';
+                            }
+                            
+                            $return .= $this->render_navigation($settings);
+        
+                        endif;
+        
+                    $return .= '</div>';
                 $return .= '</div>';
             
                 // Autoplay
@@ -217,20 +229,20 @@ if (!class_exists('\IO\IO_Slider')) {
                         autoplay: '.$autoplay.',
                         loop: '.$loop.',
                         autoHeight: '.$autoheight.',
-                        centeredslides: '.(trim($settings["centeredslides"])).',
-                        slidetoclickedslide: '.(trim($settings["slidetoclickedslide"])).',
+                        centeredSlides: '.(trim($settings["centeredslides"])).',
+                        slideToClickedSlide: '.(trim($settings["slidetoclickedslide"])).',
                         
-                        spacebetween: '.$spacebetween.',                    
-                        slidesperview: '.(trim($settings["slidesperview"])).',
+                        spaceBetween: '.$spacebetween.',                    
+                        slidesPerView: '.(trim($settings["slidesperview"])).',
                         breakpoints: {
                             768: {
-                                slidesperview: '.(trim($settings["slidesperview_md"])).'
+                                slidesPerView: '.(trim($settings["slidesperview_md"])).'
                             },
                             1025: {
-                                slidesperview: '.(trim($settings["slidesperview_lg"])).'
+                                slidesPerView: '.(trim($settings["slidesperview_lg"])).'
                             },
                             1200: {
-                                slidesperview: '.(trim($settings["slidesperview_xl"])).'
+                                slidesPerView: '.(trim($settings["slidesperview_xl"])).'
                             }
                         },
                         '. ($settings["navigation"]=="false" ? "" : '
@@ -244,7 +256,6 @@ if (!class_exists('\IO\IO_Slider')) {
                 </script>';
     
                 add_action('wp_footer', function() use ($script) { echo $script;});
-    
             }
     
             return $return;
@@ -363,6 +374,16 @@ if (!class_exists('\IO\IO_Slider')) {
             return $return;
         }
         
+        public function callback($atts = []) {
+
+            $settings = array_replace_recursive($this::get_default_settings(), $atts);
+            
+            ob_start();
+            echo $this->render($settings);
+            return ob_get_clean();
+
+        }
+
         public function shortcode_callback($atts = [], $slide_template = '') {
             // Get default code for a wordpress shortcode
             $settings = shortcode_atts($this::get_default_settings(), $atts);
